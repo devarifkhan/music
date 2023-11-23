@@ -1,22 +1,28 @@
 <template>
   <!-- Header -->
   <header id="header" class="bg-gray-700">
-    <nav class="container mx-auto flex justify-start items-center py-5 px-4">
+    <nav class="container flex items-center justify-start px-4 py-5 mx-auto">
       <!-- App Name -->
-      <a class="text-white font-bold uppercase text-2xl mr-4" href="#">Music</a>
+      <a class="mr-4 text-2xl font-bold text-white uppercase" href="#">Music</a>
 
-      <div class="flex flex-grow items-center">
+      <div class="flex items-center flex-grow">
         <!-- Primary Navigation -->
         <ul class="flex flex-row mt-1">
           <!-- Navigation Links -->
-          <li>
+          <li v-if="!userStore.userLoggedIn">
             <a class="px-2 text-white" href="#" @click.prevent="toggleAuthModal"
               >Login / Register</a
             >
           </li>
-          <li>
-            <a class="px-2 text-white" href="#">Manage</a>
-          </li>
+
+          <template v-else>
+            <li>
+              <a class="px-2 text-white" href="#">Manage</a>
+            </li>
+            <li>
+              <a class="px-2 text-white" href="#" @click.prevent="userStore.signOut">Logout</a>
+            </li>
+          </template>
         </ul>
       </div>
     </nav>
@@ -26,10 +32,12 @@
 <script>
 import { mapStores } from 'pinia'
 import useModalStore from '@/stores/modal'
+import useUserStore from '@/stores/user'
+
 export default {
   name: 'AppHeader',
   computed: {
-    ...mapStores(useModalStore)
+    ...mapStores(useModalStore, useUserStore)
   },
   methods: {
     toggleAuthModal() {
